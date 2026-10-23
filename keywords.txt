@@ -1,0 +1,210 @@
+#########################################
+# Keywords for AARUNO library — MADE BY AARUTO
+#########################################
+
+AARUNO	KEYWORD1
+begin	KEYWORD2
+update	KEYWORD2
+madeBy	KEYWORD2
+credits	KEYWORD2
+version	KEYWORD2
+boardFamily	KEYWORD2
+boardName	KEYWORD2
+lastError	KEYWORD2
+clearError	KEYWORD2
+errorString	KEYWORD2
+
+# Ultrasonic / DHT
+ultrasonic	KEYWORD2
+readUltrasonic	KEYWORD2
+readUltrasonicInches	KEYWORD2
+setUltrasonicTimeout	KEYWORD2
+ultrasonicesp32	KEYWORD2
+ultrasonicesp8266	KEYWORD2
+ultrasonicarduino	KEYWORD2
+dht11	KEYWORD2
+dht22	KEYWORD2
+readTemperature	KEYWORD2
+readHumidity	KEYWORD2
+readDHT	KEYWORD2
+dhtFresh	KEYWORD2
+dhtAgeMs	KEYWORD2
+
+# Analog engine
+analogSensor	KEYWORD2
+ldr	KEYWORD2
+readLDR	KEYWORD2
+potentiometer	KEYWORD2
+readPotentiometer	KEYWORD2
+readAnalogRaw	KEYWORD2
+readAnalogPercent	KEYWORD2
+readAnalogVoltage	KEYWORD2
+readAnalogValue	KEYWORD2
+lm35	KEYWORD2
+tmp36	KEYWORD2
+thermistor	KEYWORD2
+readTemperatureAnalog	KEYWORD2
+soilMoisture	KEYWORD2
+readSoil	KEYWORD2
+rainSensor	KEYWORD2
+readRain	KEYWORD2
+waterLevel	KEYWORD2
+readWaterLevel	KEYWORD2
+soundSensor	KEYWORD2
+readSound	KEYWORD2
+flexSensor	KEYWORD2
+readFlex	KEYWORD2
+forceSensor	KEYWORD2
+readForce	KEYWORD2
+flameAnalog	KEYWORD2
+readFlameAnalog	KEYWORD2
+gasMQ2	KEYWORD2
+gasMQ3	KEYWORD2
+gasMQ4	KEYWORD2
+gasMQ5	KEYWORD2
+gasMQ6	KEYWORD2
+gasMQ7	KEYWORD2
+gasMQ8	KEYWORD2
+gasMQ9	KEYWORD2
+gasMQ135	KEYWORD2
+readGas	KEYWORD2
+currentSensor	KEYWORD2
+readCurrent	KEYWORD2
+setThermistorParams	KEYWORD2
+setCurrentParams	KEYWORD2
+readAnalog	KEYWORD2
+readVoltage	KEYWORD2
+
+# Digital engine
+digitalSensor	KEYWORD2
+readDigitalSensor	KEYWORD2
+pir	KEYWORD2
+readPIR	KEYWORD2
+irObstacle	KEYWORD2
+readIR	KEYWORD2
+lineFollower	KEYWORD2
+readLine	KEYWORD2
+flameSensor	KEYWORD2
+readFlame	KEYWORD2
+vibrationSensor	KEYWORD2
+readVibration	KEYWORD2
+tiltSensor	KEYWORD2
+readTilt	KEYWORD2
+touchSensor	KEYWORD2
+readTouch	KEYWORD2
+hallSensor	KEYWORD2
+readHall	KEYWORD2
+reedSwitch	KEYWORD2
+readReed	KEYWORD2
+limitSwitch	KEYWORD2
+readLimit	KEYWORD2
+irReceiver	KEYWORD2
+readIRRemote	KEYWORD2
+button	KEYWORD2
+readButton	KEYWORD2
+buttonPressed	KEYWORD2
+buttonRose	KEYWORD2
+buttonFell	KEYWORD2
+
+# Encoder / keypad / joystick
+rotaryEncoder	KEYWORD2
+encoderCount	KEYWORD2
+encoderReset	KEYWORD2
+encoderButton	KEYWORD2
+keypad4x4	KEYWORD2
+readKey	KEYWORD2
+joystick	KEYWORD2
+readJoyX	KEYWORD2
+readJoyY	KEYWORD2
+readJoyButton	KEYWORD2
+
+# IMU / extras / I2C
+mpu6050	KEYWORD2
+readAccel	KEYWORD2
+readGyro	KEYWORD2
+readIMUTemp	KEYWORD2
+readAccelX	KEYWORD2
+readAccelY	KEYWORD2
+readAccelZ	KEYWORD2
+readGyroX	KEYWORD2
+readGyroY	KEYWORD2
+readGyroZ	KEYWORD2
+ds18b20	KEYWORD2
+readDS18B20	KEYWORD2
+bmp280	KEYWORD2
+readPressure	KEYWORD2
+readBMPTemp	KEYWORD2
+i2cDevicePresent	KEYWORD2
+i2cScan	KEYWORD2
+i2cScanCount	KEYWORD2
+i2cRead8	KEYWORD2
+i2cWrite8	KEYWORD2
+
+# Displays
+oled	KEYWORD2
+lcd	KEYWORD2
+lcdI2C	KEYWORD2
+autoScan	KEYWORD2
+oledAuto	KEYWORD2
+lcdAuto	KEYWORD2
+displayClear	KEYWORD2
+displayText	KEYWORD2
+displayTextAt	KEYWORD2
+displayBacklight	KEYWORD2
+
+# Actuators
+led	KEYWORD2
+setLED	KEYWORD2
+toggleLED	KEYWORD2
+setBrightness	KEYWORD2
+buzzer	KEYWORD2
+beep	KEYWORD2
+buzzerOff	KEYWORD2
+relay	KEYWORD2
+setRelay	KEYWORD2
+solenoid	KEYWORD2
+setSolenoid	KEYWORD2
+laserEmitter	KEYWORD2
+setLaser	KEYWORD2
+rgb	KEYWORD2
+setRGBRGB	KEYWORD2
+setRGB	KEYWORD2
+pwmOut	KEYWORD2
+writePWM	KEYWORD2
+motorBegin	KEYWORD2
+motorSpeed	KEYWORD2
+stepperAttach	KEYWORD2
+stepperSetRpm	KEYWORD2
+stepperStep	KEYWORD2
+stepperRelease	KEYWORD2
+servoAttach	KEYWORD2
+servoWrite	KEYWORD2
+servoDetach	KEYWORD2
+
+# WiFi / HTTP
+wifiBegin	KEYWORD2
+wifiStart	KEYWORD2
+wifiState	KEYWORD2
+wifiConnected	KEYWORD2
+wifiRSSI	KEYWORD2
+wifiDisconnect	KEYWORD2
+httpGet	KEYWORD2
+
+# Pin helpers
+isValidDigitalPin	KEYWORD2
+isValidAnalogPin	KEYWORD2
+isValidPwmPin	KEYWORD2
+
+AarunoUltrasonic	KEYWORD1
+AarunoButton	KEYWORD1
+AarunoAnalogEngine	KEYWORD1
+AarunoDigitalEngine	KEYWORD1
+AarunoEncoder	KEYWORD1
+AarunoKeypad	KEYWORD1
+AarunoMPU6050	KEYWORD1
+AarunoI2C	KEYWORD1
+AarunoDS18B20	KEYWORD1
+AarunoBMP280	KEYWORD1
+AarunoStepper	KEYWORD1
+AarunoError	LITERAL1
+AARUNO_OK	LITERAL1

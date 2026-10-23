@@ -1,0 +1,28 @@
+# ---> Arduino IDE
+build/
+*.o
+*.a
+*.elf
+*.bin
+*.hex
+
+# ---> Arduino CLI
+.arduino/
+build-*/
+
+# ---> OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---> Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---> Python host tests
+__pycache__/
+.pytest_cache/
+.venv/

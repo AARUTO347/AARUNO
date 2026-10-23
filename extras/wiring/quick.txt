@@ -1,0 +1,12 @@
+HC-SR04 quick wiring
+===================
+Uno: VCC 5V, GND GND, TRIG 7, ECHO 8
+ESP32: VCC 5V(VIN), GND GND, TRIG 5, ECHO via 1k/2k divider to 18
+ESP8266: VCC 5V(VU), GND GND, TRIG 5(D1), ECHO via divider to 4(D2)
+
+DHT11: VCC 3V3/5V, DATA GPIO + 10k pull-up, GND GND
+LDR: VCC -- LDR -- A* -- 10k -- GND
+Button: GPIO -- BTN -- GND (INPUT_PULLUP)
+PIR: VCC 5V, OUT GPIO, GND GND
+LED: GPIO -- 220R -- LED -- GND
+Relay module: VCC 5V, GND GND, IN GPIO (set polarity flag)
