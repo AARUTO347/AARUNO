@@ -1,4 +1,5 @@
 #include "AarunoMPU6050.h"
+#include "AarunoI2CUtil.h"
 #if defined(ARDUINO)
 #include <Wire.h>
 #else
@@ -15,6 +16,8 @@ static int read() { return -1; }
 #define AARUNO_MPU_ACCEL 0x3B
 #define AARUNO_MPU_TEMP 0x41
 #define AARUNO_MPU_GYRO 0x43
+#define AARUNO_MPU_WHO_AM_I 0x75
+#define AARUNO_MPU_WHO_AM_I_VAL 0x68
 
 AarunoMPU6050::AarunoMPU6050()
     : _addr(0x68), _begun(false), _err(AARUNO_NOT_INITIALIZED) {}
@@ -22,16 +25,17 @@ AarunoMPU6050::AarunoMPU6050()
 AarunoError AarunoMPU6050::begin(uint8_t addr) {
 #if defined(ARDUINO)
   if (addr < 0x08 || addr > 0x77) { _err = AARUNO_INVALID_CONFIG; return _err; }
-  Wire.begin();
+  AarunoI2C::begin();
   _addr = addr;
-  Wire.beginTransmission(_addr);
-  Wire.write(AARUNO_MPU_PWR);
-  Wire.write(0);  // wake up
-  if (Wire.endTransmission() != 0) {
-    _err = AARUNO_INIT_FAIL;  // NACK: no MPU at this address
+  // Verify device identity via WHO_AM_I register (should be 0x68).
+  int who = AarunoI2C::readReg8(_addr, AARUNO_MPU_WHO_AM_I);
+  if (who != AARUNO_MPU_WHO_AM_I_VAL) {
+    _err = AARUNO_INIT_FAIL;  // no MPU6050 at this address
     _begun = false;
     return _err;
   }
+  // Wake up the sensor.
+  AarunoI2C::writeReg8(_addr, AARUNO_MPU_PWR, 0);
   _begun = true;
   _err = AARUNO_OK;
   return AARUNO_OK;

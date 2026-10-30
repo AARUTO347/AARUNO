@@ -19,6 +19,7 @@ class AarunoStepper {
 
  private:
   void writePhase(int phase);
+  AarunoError setErr(AarunoError e) { _err = e; return e; }
   uint8_t _pins[4];
   double _rpm;
   long _pos;

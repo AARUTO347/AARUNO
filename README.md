@@ -13,14 +13,14 @@ Core has **no mandatory third-party dependencies**. Displays, DHT and Servo are 
 
 ## Install (Arduino IDE → .zip)
 
-1. Download this repo as `.zip` (Code → Download ZIP) or use the release `AARUNO-1.0.0.zip`.
+1. Download this repo as `.zip` (Code → Download ZIP) or use the release `AARUNO-1.1.1.zip`.
 2. Arduino IDE → Sketch → Include Library → Add .ZIP Library → select the file.
 3. Check: File → Examples → AARUNO → Basic.
 
 ## Install (Arduino CLI)
 
 ```sh
-arduino-cli lib install --zip-path AARUNO-1.0.0.zip
+arduino-cli lib install --zip-path AARUNO-1.1.1.zip
 # Optional deps (only if you use those modules):
 arduino-cli lib install "DHT sensor library" "Adafruit Unified Sensor"
 arduino-cli lib install "Adafruit SSD1306" "Adafruit GFX Library"

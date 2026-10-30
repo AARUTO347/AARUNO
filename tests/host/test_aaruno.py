@@ -40,7 +40,9 @@ def percent(raw, mx):
 def lm35_c(mv): return mv * 0.1
 def tmp36_c(mv): return (mv - 500.0) / 10.0
 def acs712_a(mv, mpa, zero): return (mv - zero) / mpa
-def mq_ratio(raw, mx): return (mx - raw) / raw
+def mq_ratio(raw, mx):
+    if mx <= 0 or raw <= 0 or raw >= mx: return -1.0
+    return (mx - raw) / raw
 
 def check(name, cond):
     print(("PASS " if cond else "FAIL ") + name)
@@ -52,7 +54,7 @@ check("0us invalid", distance_cm(0) < 0)
 check("roundtrip 123cm", echo_us_from_cm(123) == 123*58)
 check("nonpositive cm->0", echo_us_from_cm(0) == 0 and echo_us_from_cm(-5) == 0)
 check("timeout range", distance_cm(30000) > 500 and distance_cm(30000) < 600)
-check("inches 148us->1", abs(148/148.0 - 1.0) < 1e-9)
+check("inches 148us->1cm", abs(distance_cm(148) - 2.55) < 0.01)
 
 # ADC mapping
 check("midscale 5V", 2490 <= adc_to_mv(512, 1023, 5.0, 1.0) < 2520)

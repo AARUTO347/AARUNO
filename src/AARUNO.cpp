@@ -1,4 +1,4 @@
-// AARUNO v1.1.0 — MADE BY AARUTO
+// AARUNO v1.1.1 — MADE BY AARUTO
 // Implementation of the AarunoClass singleton + named wrappers.
 #include "AARUNO.h"
 #include "utility/AarunoUtil.h"

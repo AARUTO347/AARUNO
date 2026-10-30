@@ -1,7 +1,7 @@
 #include <AARUNO.h>
 
 // 28BYJ-48 stepper via ULN2003 driver (IN1..IN4). step() BLOCKS per step.
-// Uno: 8,9,10,11. ESP32: 26,27,14,12. ESP8266: 5,4,0,2 (boot-safe pins).
+// Uno: 8,9,10,11. ESP32: 26,27,14,12. ESP8266: 5,4,14,12 (avoid GPIO0/GPIO2 boot pins).
 #if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 #define ST_IN1 26
 #define ST_IN2 27
@@ -10,8 +10,11 @@
 #elif defined(ESP8266) || defined(ARDUINO_ARCH_ESP8266)
 #define ST_IN1 5
 #define ST_IN2 4
-#define ST_IN3 0
-#define ST_IN4 2
+#define ST_IN3 14
+#define ST_IN4 12  // Avoid GPIO0/GPIO2 (boot strapping pins)
+// WARNING: GPIO0 and GPIO2 are ESP8266 boot strapping pins. Using them for
+// stepper IN3/IN4 can prevent normal boot depending on wiring/power-up state.
+// Use GPIO5, GPIO4, GPIO14, GPIO12 (D1, D2, D5, D6) instead where possible.
 #else
 #define ST_IN1 8
 #define ST_IN2 9

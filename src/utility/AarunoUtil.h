@@ -1,10 +1,14 @@
 #ifndef AARUNO_UTIL_H
 #define AARUNO_UTIL_H
 
+#include <stddef.h>
 #include <stdint.h>
+#include <math.h>
 
 // Pure, hardware-independent helpers. Safe for host unit tests.
 // AARUNO — MADE BY AARUTO
+
+#include "../AARUNOTypes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -117,8 +121,5 @@ static inline const char *aarunoErrorName(int code) {
 #ifdef __cplusplus
 }
 #endif
-
-// math.h for logf in NTC (kept outside extern "C" guard for C++ linkers)
-#include <math.h>
 
 #endif

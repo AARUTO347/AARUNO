@@ -3,8 +3,22 @@
 #include <Wire.h>
 #endif
 
+bool AarunoI2C::_wireBegun = false;
+
+void AarunoI2C::begin() {
+#if defined(ARDUINO)
+  if (!_wireBegun) {
+    Wire.begin();
+    _wireBegun = true;
+  }
+#else
+  (void)_wireBegun;
+#endif
+}
+
 bool AarunoI2C::isDevicePresent(uint8_t addr) {
 #if defined(ARDUINO)
+  begin();
   if (addr < 0x08 || addr > 0x77) return false;
   Wire.beginTransmission(addr);
   return Wire.endTransmission() == 0;
@@ -16,6 +30,7 @@ bool AarunoI2C::isDevicePresent(uint8_t addr) {
 
 int AarunoI2C::scanFirst() {
 #if defined(ARDUINO)
+  begin();
   for (uint8_t a = 0x08; a <= 0x77; a++) {
     if (isDevicePresent(a)) return (int)a;
   }
@@ -27,6 +42,7 @@ int AarunoI2C::scanFirst() {
 
 uint8_t AarunoI2C::scanCount() {
 #if defined(ARDUINO)
+  begin();
   uint8_t n = 0;
   for (uint8_t a = 0x08; a <= 0x77; a++) {
     if (isDevicePresent(a)) n++;
@@ -39,6 +55,7 @@ uint8_t AarunoI2C::scanCount() {
 
 int AarunoI2C::readReg8(uint8_t addr, uint8_t reg) {
 #if defined(ARDUINO)
+  begin();
   if (addr < 0x08 || addr > 0x77) return -1;
   Wire.beginTransmission(addr);
   Wire.write(reg);
@@ -53,6 +70,7 @@ int AarunoI2C::readReg8(uint8_t addr, uint8_t reg) {
 
 bool AarunoI2C::writeReg8(uint8_t addr, uint8_t reg, uint8_t value) {
 #if defined(ARDUINO)
+  begin();
   if (addr < 0x08 || addr > 0x77) return false;
   Wire.beginTransmission(addr);
   Wire.write(reg);

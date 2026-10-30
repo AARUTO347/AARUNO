@@ -67,22 +67,29 @@ float AarunoAnalogEngine::readSpecial() {
     case AARUNO_AN_LM35: {
       long mv = aarunoAdcToMillivolts(raw, AARUNO_ADC_MAX, AARUNO_ADC_VREF, 1.0f);
       out = aarunoLm35C(mv);
+      // LM35 measures temperature >= 0 C by design; negative is invalid.
+      if (out < 0) { _err = AARUNO_READ_FAIL; return AARUNO_INVALID_READING; }
       break;
     }
     case AARUNO_AN_TMP36: {
       long mv = aarunoAdcToMillivolts(raw, AARUNO_ADC_MAX, AARUNO_ADC_VREF, 1.0f);
       out = aarunoTmp36C(mv);
+      // TMP36 can measure below 0 C; negative is valid.
       break;
     }
     case AARUNO_AN_NTC:
       out = aarunoNtcC(raw, AARUNO_ADC_MAX, _seriesR, _beta, _r0, _t0);
+      // NTC can measure below 0 C; negative is valid.
       break;
     case AARUNO_AN_MQ:
       out = aarunoMqRatio(raw, AARUNO_ADC_MAX);
+      // MQ ratio is always positive for valid raw.
+      if (out < 0) { _err = AARUNO_READ_FAIL; return AARUNO_INVALID_READING; }
       break;
     case AARUNO_AN_CURRENT: {
       long mv = aarunoAdcToMillivolts(raw, AARUNO_ADC_MAX, AARUNO_ADC_VREF, 1.0f);
       out = aarunoAcs712Amps(mv, _mvPerAmp, _zeroMv);
+      // ACS712 can measure negative current; negative is valid.
       break;
     }
     case AARUNO_AN_PLAIN_PCT:
@@ -92,7 +99,11 @@ float AarunoAnalogEngine::readSpecial() {
       _err = AARUNO_OK;
       return (float)raw;
   }
-  if (out < 0) { _err = AARUNO_READ_FAIL; return AARUNO_INVALID_READING; }
+  if (out < 0 && _kind != AARUNO_AN_TMP36 && _kind != AARUNO_AN_NTC &&
+      _kind != AARUNO_AN_CURRENT) {
+    _err = AARUNO_READ_FAIL;
+    return AARUNO_INVALID_READING;
+  }
   _err = AARUNO_OK;
   return out;
 }

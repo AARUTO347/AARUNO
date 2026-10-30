@@ -17,6 +17,7 @@ class AarunoEncoder {
   bool buttonPressed();                // requires swPin in begin(); active-low
   void inject(uint8_t clk, uint8_t dt, unsigned long nowMs);  // host tests
   AarunoError lastError() const { return _err; }
+  bool configured() const { return _begun; }
 
  private:
   uint8_t _clk, _dt;

@@ -1,4 +1,4 @@
-# API Reference — AARUNO 1.0.0
+# API Reference - AARUNO 1.1.1
 
 All functions are methods on the global `AARUNO` singleton unless noted.
 Check `AARUNO.lastError()` after reads. `AARUNO_OK == 0`.
@@ -7,7 +7,7 @@ Check `AARUNO.lastError()` after reads. `AARUNO_OK == 0`.
 
 - `void begin()` — must be called first. Sets ADC resolution per board.
 - `void update()` — call every loop. Services button debounce.
-- `const char* version()` — e.g. `"1.0.0"`.
+- `const char* version()` - e.g. `"1.1.1"`.
 - `AarunoError lastError() / clearError() / errorString()`.
 
 Error codes: `OK, ERROR, INVALID_PIN, INVALID_CONFIG, TIMEOUT, READ_FAIL, UNSUPPORTED, MISSING_DEP, INIT_FAIL, NOT_INITIALIZED`.

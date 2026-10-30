@@ -1,5 +1,5 @@
 // ============================================================
-//  AARUNO v1.1.0 — Universal Arduino & ESP Library
+//  AARUNO v1.1.1 — Universal Arduino & ESP Library
 //  MADE BY AARUTO
 //  100+ sensors, actuators, displays, comms. Simple syntax.
 // ============================================================
@@ -19,6 +19,7 @@
 #include "sensors/AarunoMPU6050.h"
 #include "sensors/AarunoI2CUtil.h"
 #include "sensors/AarunoExtras.h"
+#include "actuators/AarunoStepper.h"
 #include "displays/AarunoDisplay.h"
 #include "communication/AarunoWifi.h"
 #include "communication/AarunoHTTP.h"
@@ -26,6 +27,7 @@
 #if defined(ARDUINO)
 #include <Arduino.h>
 #else
+#include <stddef.h>
 #include <stdint.h>
 // Minimal host fallback so IDEs/static analysis can parse the header.
 class Stream {

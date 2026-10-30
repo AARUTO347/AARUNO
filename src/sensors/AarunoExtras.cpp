@@ -8,6 +8,8 @@
 #include <DallasTemperature.h>
 #define AARUNO_HAS_DS18B20 1
 #endif
+#endif
+#if defined(ARDUINO)
 #if __has_include(<Adafruit_BMP280.h>)
 #include <Adafruit_BMP280.h>
 #include <Wire.h>

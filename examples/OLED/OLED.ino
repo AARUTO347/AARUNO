@@ -13,7 +13,7 @@ void setup() {
     Serial.println("OLED not found: check wiring/address.");
   } else if (e == AARUNO_OK) {
     AARUNO.displayText(0, "AARUNO ready");
-    AARUNO.displayText(1, "v1.0.2");
+    AARUNO.displayText(1, "v1.1.1");
   }
 }
 
