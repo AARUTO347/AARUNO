@@ -1,0 +1,33 @@
+{
+  "name": "AARUNO",
+  "version": "1.1.1",
+  "description": "Universal Arduino & ESP library — one consistent API for ultrasonic, DHT11/DHT22, LDR, buttons, PIR, LED, buzzer, relay, motor, servo, OLED/LCD, MQ gas sensors, MPU6050 IMU, rotary encoder, keypad, joystick, RGB LED, stepper motor, ESP WiFi and HTTP across Uno R3, Uno R4 Minima, Uno R4 WiFi, ESP32 and ESP8266.",
+  "author": "AARUTO",
+  "maintainer": "AARUTO",
+  "category": "Sensors",
+  "url": "https://github.com/AARUTO347/AARUNO",
+  "architectures": ["avr","renesas_uno","esp32","esp8266"],
+  "download": "https://github.com/AARUTO347/AARUNO/releases/download/v1.1.1/AARUNO-1.1.1.zip",
+  "checksum": "SHA-256:240182F34EAFCBDB2978EAE7FE596C012BFDA3653E525BCF97573A0253FAFDE7",
+  "depends": [],
+  "examples": [
+    "Basic",
+    "Ultrasonic",
+    "DHT11",
+    "LDR",
+    "MotionDetection",
+    "LEDBuzzer",
+    "OLED",
+    "I2CLCD",
+    "GasSensor",
+    "Joystick",
+    "Keypad4x4",
+    "MPU6050",
+    "RGBLED",
+    "RotaryEncoder",
+    "StepperMotor",
+    "HTTPGet",
+    "ESP32WiFi",
+    "ESP8266WiFi"
+  ]
+}

@@ -53,6 +53,19 @@ arduino-cli lib install "Adafruit SSD1306" "Adafruit GFX Library"
 arduino-cli lib install "LiquidCrystal I2C"
 ```
 
+### Library Manager
+
+Add AARUNO directly from the Arduino IDE Library Manager:
+
+1. Arduino IDE → **File** → **Preferences**
+2. In **Additional Boards Manager URLs** (or **Additional Libraries Manager URLs**), add:
+   ```
+   https://raw.githubusercontent.com/AARUTO347/AARUNO/docs/site/library-index.json
+   ```
+3. Arduino IDE → **Sketch** → **Include Library** → **Manage Libraries...**
+4. Search for **AARUNO** and click **Install**
+
+
 ## Quick Start
 
 ```cpp
