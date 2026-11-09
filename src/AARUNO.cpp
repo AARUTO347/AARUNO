@@ -48,9 +48,8 @@ AarunoClass::AarunoClass()
       _joySw(-1), _relayActiveHigh(true), _solenoidActiveHigh(true),
       _ledState(false), _relayState(false), _solenoidState(false),
       _rgbSetUp(false), _motorIn1(-1), _motorIn2(-1), _motorEn(-1),
-      _servoPin(-1), _servo(nullptr) {
+      _servoPin(-1), _servo(nullptr), _stepBegun(false) {
   _rgbPins[0] = _rgbPins[1] = _rgbPins[2] = 255;
-  _step = nullptr;
 }
 
 // ---------------- Core ----------------
@@ -817,28 +816,28 @@ AarunoError AarunoClass::motorSpeed(int speed) {
 AarunoError AarunoClass::stepperAttach(uint8_t in1, uint8_t in2, uint8_t in3,
                                        uint8_t in4) {
   if (!_begun) return setErr(AARUNO_NOT_INITIALIZED);
-  if (!_step) _step = new AarunoStepper();
-  AarunoError e = _step->begin(in1, in2, in3, in4);
+  AarunoError e = _step.begin(in1, in2, in3, in4);
   if (e != AARUNO_OK) { setErr(e); return e; }
-  _step->setRpm(15.0);
+  _step.setRpm(15.0);
+  _stepBegun = true;
   return setErr(AARUNO_OK);
 }
 
 AarunoError AarunoClass::stepperSetRpm(double rpm) {
-  if (!_step) return setErr(AARUNO_NOT_INITIALIZED);
-  _step->setRpm(rpm);
+  if (!_stepBegun) return setErr(AARUNO_NOT_INITIALIZED);
+  _step.setRpm(rpm);
   return setErr(AARUNO_OK);
 }
 
 AarunoError AarunoClass::stepperStep(long steps) {
-  if (!_step) return setErr(AARUNO_NOT_INITIALIZED);
+  if (!_stepBegun) return setErr(AARUNO_NOT_INITIALIZED);
   // BLOCKING by design: moves step-by-step at the set RPM.
-  return setErr(_step->step(steps));
+  return setErr(_step.step(steps));
 }
 
 AarunoError AarunoClass::stepperRelease() {
-  if (!_step) return setErr(AARUNO_NOT_INITIALIZED);
-  _step->release();
+  if (!_stepBegun) return setErr(AARUNO_NOT_INITIALIZED);
+  _step.release();
   return setErr(AARUNO_OK);
 }
 
@@ -913,9 +912,18 @@ long AarunoClass::wifiRSSI() {
 
 void AarunoClass::wifiDisconnect() { _wifi.disconnect(); }
 
+void AarunoClass::wifiSetRetryPolicy(uint8_t retries, unsigned long delayMs) {
+  _wifi.setRetryPolicy(retries, delayMs);
+}
+
+uint8_t AarunoClass::wifiRetryCount() const {
+  return _wifi.retryCount();
+}
+
 int AarunoClass::httpGet(const char *url, Stream &out) {
 #if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)
-  int code = AarunoHTTP::get(url, (void *)&out);
+  _http.setStream(&out);
+  int code = _http.get(url);
   setErr(code > 0 ? AARUNO_OK : AARUNO_ERROR);
   return code;
 #else
@@ -923,6 +931,26 @@ int AarunoClass::httpGet(const char *url, Stream &out) {
   setErr(AARUNO_UNSUPPORTED);
   return -1;
 #endif
+}
+
+void AarunoClass::httpSetConnectTimeout(unsigned long ms) {
+  _http.setConnectTimeout(ms);
+}
+
+void AarunoClass::httpSetReadTimeout(unsigned long ms) {
+  _http.setReadTimeout(ms);
+}
+
+void AarunoClass::httpSetMaxResponseSize(unsigned long bytes) {
+  _http.setMaxResponseSize(bytes);
+}
+
+int AarunoClass::httpLastStatusCode() const {
+  return _http.lastStatusCode();
+}
+
+unsigned long AarunoClass::httpLastBodyBytes() const {
+  return _http.lastBodyBytes();
 }
 
 // ---------------- Convenience aliases ----------------

@@ -1,6 +1,11 @@
 #include "AarunoExtras.h"
 #include "../AARUNOBoard.h"
 #include "../AARUNOConfig.h"
+#include "AarunoI2CUtil.h"
+#if defined(ARDUINO)
+#include <Arduino.h>
+#include <Wire.h>
+#endif
 #ifdef __has_include
 #if defined(ARDUINO) && AARUNO_ENABLE_DHT
 #if __has_include(<DallasTemperature.h>) && __has_include(<OneWire.h>)
@@ -12,13 +17,9 @@
 #if defined(ARDUINO)
 #if __has_include(<Adafruit_BMP280.h>)
 #include <Adafruit_BMP280.h>
-#include <Wire.h>
 #define AARUNO_HAS_BMP280 1
 #endif
 #endif
-#endif
-#if defined(ARDUINO)
-#include <Arduino.h>
 #endif
 
 // ---------- DS18B20 ----------
@@ -86,7 +87,7 @@ AarunoError AarunoBMP280::begin(uint8_t addr) {
 #if defined(AARUNO_HAS_BMP280)
   if (addr < 0x08 || addr > 0x77) { _err = AARUNO_INVALID_CONFIG; return _err; }
   if (_handle) { delete (Adafruit_BMP280 *)_handle; _handle = nullptr; }
-  Wire.begin();
+  AarunoI2C::begin();
   Adafruit_BMP280 *b = new Adafruit_BMP280();
   if (!b->begin(addr)) {
     delete b;

@@ -18,7 +18,13 @@ static void delay(unsigned long) {}
 #endif
 
 AarunoWifi::AarunoWifi()
-    : _state(AARUNO_WIFI_IDLE), _startMs(0), _timeoutMs(15000), _begun(false) {}
+    : _state(AARUNO_WIFI_IDLE), _startMs(0), _timeoutMs(15000),
+      _retryDelayMs(5000), _maxRetries(3), _retryCount(0), _begun(false) {}
+
+void AarunoWifi::setRetryPolicy(uint8_t retries, unsigned long retryDelayMs) {
+  _maxRetries = retries;
+  _retryDelayMs = retryDelayMs;
+}
 
 AarunoError AarunoWifi::start(const char *ssid, const char *pass,
                               unsigned long timeoutMs) {
@@ -31,6 +37,7 @@ AarunoError AarunoWifi::start(const char *ssid, const char *pass,
   _timeoutMs = timeoutMs;
   _begun = true;
   _state = AARUNO_WIFI_CONNECTING;
+  _retryCount = 0;  // reset retry count on new attempt
   update();  // fast-path: already connected (e.g. reconnect)
   return AARUNO_OK;
 #else
@@ -42,13 +49,34 @@ AarunoError AarunoWifi::start(const char *ssid, const char *pass,
 
 void AarunoWifi::update() {
 #if defined(AARUNO_HAS_WIFI)
-  if (!_begun || _state != AARUNO_WIFI_CONNECTING) return;
-  if (WiFi.status() == WL_CONNECTED) {
-    _state = AARUNO_WIFI_CONNECTED;
-    return;
-  }
-  if ((millis() - _startMs) >= _timeoutMs) {
-    _state = AARUNO_WIFI_FAILED;
+  if (!_begun) return;
+
+  if (_state == AARUNO_WIFI_CONNECTING) {
+    if (WiFi.status() == WL_CONNECTED) {
+      _state = AARUNO_WIFI_CONNECTED;
+      return;
+    }
+    if ((millis() - _startMs) >= _timeoutMs) {
+      if (_retryCount < _maxRetries) {
+        _retryCount++;
+        WiFi.begin((const char*)"", (const char*)"");
+        _startMs = millis();
+        _state = AARUNO_WIFI_CONNECTING;
+      } else {
+        _state = AARUNO_WIFI_FAILED;
+      }
+    }
+  } else if (_state == AARUNO_WIFI_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED) {
+      // Connection dropped — attempt reconnect if retries remain.
+      _state = AARUNO_WIFI_CONNECTING;
+      _startMs = millis();
+      if (_retryCount < _maxRetries) {
+        _retryCount++;
+      } else {
+        _state = AARUNO_WIFI_FAILED;
+      }
+    }
   }
 #endif
 }
@@ -97,4 +125,5 @@ void AarunoWifi::disconnect() {
 #endif
   _state = AARUNO_WIFI_IDLE;
   _begun = false;
+  _retryCount = 0;
 }

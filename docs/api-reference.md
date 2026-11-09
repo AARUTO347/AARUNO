@@ -65,3 +65,15 @@ Units: cm. Formula `cm = echo_us / 58`. Timeout → `lastError()==TIMEOUT`.
 - `wifiBegin(ssid,pass,timeoutMs)` — BLOCKING helper, `TIMEOUT` on failure, `UNSUPPORTED` on non-ESP.
 - `wifiStart(ssid,pass,timeoutMs)` + `update()` + `wifiState()` — non-blocking; states IDLE/CONNECTING/CONNECTED/FAILED/UNSUPPORTED.
 - `wifiConnected()` / `wifiRSSI()` / `wifiDisconnect()`.
+- `wifiSetRetryPolicy(retries, delayMs)` — configure reconnect attempts (default: 3 retries, 5000ms delay).
+- `wifiRetryCount()` — returns number of reconnection attempts made.
+
+## HTTP (ESP only)
+
+- `httpGet(url, stream)` — HTTP GET, streams body to `Stream`. Returns code (>0), -1 fail, -2 timeout, -3 too large.
+- `httpSetConnectTimeout(ms)` — default 5000.
+- `httpSetReadTimeout(ms)` — default 5000.
+- `httpSetMaxResponseSize(bytes)` — default 4096; 0 = unlimited.
+- `httpLastStatusCode()` / `httpLastBodyBytes()` — last request info.
+
+HTTP uses streaming (no full-body buffering), TLS certificate validation enabled, configurable timeouts and size limits.

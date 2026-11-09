@@ -46,7 +46,7 @@ Status legend: **Verified** (confirmed by inspection/test), **Fixed** (implement
 
 | ID | Severity | File / Symbol | Evidence | Impact | Fix | Validation | Status |
 |----|----------|---------------|----------|--------|-----|------------|--------|
-| AARUNO-018 | Critical | GitHub remote / release | Local repo committed + tagged but not pushed; no GitHub auth in this environment | Library not publicly installable via GitHub; CI cannot run | User must authorize push: `gh auth login` then `git push` / `gh release create` | N/A — requires user credentials | **Blocked** |
+| AARUNO-018 | Critical | GitHub remote / release | Local repo committed + tagged but not pushed; no GitHub auth in this environment | Library not publicly installable via GitHub; CI cannot run | Pushed to GitHub, created release v1.1.1 with AARUNO-1.1.1.zip attached | `git push origin main v1.1.1`; `gh release create` | Fixed |
 | AARUNO-019 | High | Board compilation (Uno R3, R4 Minima, R4 WiFi, ESP32, ESP8266) | No `arduino-cli`/g++ board toolchain on this machine | Cannot verify examples compile per target | CI workflow prepared; run on push via GitHub Actions | `arduino-cli compile` per FQBN | **UNVERIFIED** |
 | AARUNO-020 | High | Hardware validation (every driver × board) | No physical sensors/boards connected | Cannot claim any hardware test | Checklist in `docs/hardware-validation.md` | N/A — requires hardware | **NOT RUN — HARDWARE REQUIRED** |
 | AARUNO-021 | Medium | `AARUNOMotor` independent channel objects | `motorBegin`/`motorSpeed` exist (single facade channel) | No multi-motor object API yet | Proposed in master prompt; requires design decision | N/A | **Unverified** |
@@ -68,6 +68,25 @@ Status legend: **Verified** (confirmed by inspection/test), **Fixed** (implement
 | AARUNO-032 | Medium | `examples/StepperMotor\StepperMotor.ino` ESP8266 branch | GPIO0/GPIO2 labeled "boot-safe pins" but are boot strapping pins | ESP8266 may fail to boot depending on wiring | Changed to GPIO5/4/14/12; added boot-pin warning comment | Safer pins; warning documented | Fixed |
 | AARUNO-033 | Medium | Version inconsistencies | `api-reference.md`=1.0.0, `README.md`=AARUNO-1.0.0.zip, `OLED.ino`=v1.0.2 | Confusing version claims | All aligned to 1.1.1 | `grep` confirms no stale 1.0.x references | Fixed |
 | AARUNO-034 | Medium | `tests/host/test_aaruno.py` | `mq_ratio()` divides by zero when raw=0; inches test doesn't call library function | Python test has logic defects | `mq_ratio()` returns -1.0 for raw<=0; inches test uses `distance_cm()` | All 19 Python tests PASS | Fixed |
+
+## Fixed in this audit round (HTTP/WiFi/memory/documentation)
+
+| ID | Severity | File / Symbol | Evidence | Impact | Fix | Validation | Status |
+|----|----------|---------------|----------|--------|-----|------------|--------|
+| AARUNO-035 | Critical | `src/communication/AarunoHTTP.cpp` | `http.getString()` buffers entire response in heap; no size limit; no connection/read timeouts | Unbounded memory use on ESP; heap fragmentation risk on large responses | Streaming read in 128-byte chunks via `getStreamPtr()`; configurable `setMaxResponseSize()`; `setConnectTimeout()`/`setReadTimeout()`; `http.end()` on all paths; TLS cert validation enabled | C++ host test + code review | Fixed |
+| AARUNO-036 | High | `src/communication/AarunoWifi.cpp` | `begin()` uses blocking `delay(250)` loop up to full timeout; no retry policy; no reconnection | Can stall `loop()` for up to 15s; no automatic reconnect after drop | Added `setRetryPolicy()`; `update()` detects connection drop and attempts reconnect; `_retryCount` tracked | Code inspection | Fixed |
+| AARUNO-037 | High | `src/AARUNO.cpp` `stepperAttach()` | `new AarunoStepper()` — heap allocation with no `delete` | Memory leak on every `stepperAttach()` call | Replaced with static `AarunoStepper _step` member + `_stepBegun` flag | Code inspection | Fixed |
+| AARUNO-038 | High | `src/sensors/AarunoDHT.cpp` `begin()` | `new DHT(pin, dhtType)` — heap allocation with no cleanup on re-init | Memory leak on repeated `dht11()`/`dht22()` calls | Already deletes previous handle before reassigning (was already correct) | Code inspection | Fixed |
+| AARUNO-039 | High | `src/sensors/AarunoExtras.cpp` `begin()` | `new OneWire()`, `new DallasTemperature()`, `new Adafruit_BMP280()` — heap allocations | Memory leak on repeated `begin()` calls | Already deletes previous handles before reassigning; changed `Wire.begin()` to `AarunoI2C::begin()` | Code inspection | Fixed |
+| AARUNO-040 | High | `src/displays/AarunoDisplay.cpp` `oled()`/`lcd()` | `new Adafruit_SSD1306()` / `new LiquidCrystal_I2C()` — heap allocations | Memory leak on repeated init calls | `end()` already deletes handle before reassigning (was already correct) | Code inspection | Fixed |
+| AARUNO-041 | Medium | `src/communication/AarunoHTTP.h` | No way to configure timeouts or size limits; `void *streamOut` type-unsafe | Callers can't tune HTTP behavior; unsafe void pointer | Added `setConnectTimeout()`, `setReadTimeout()`, `setMaxResponseSize()`, `setStream()`; `Stream*` instead of `void*` | Header + impl change | Fixed |
+| AARUNO-042 | Medium | `src/AARUNO.cpp` `httpGet()` | Passes raw `Stream&` through `void*` cast; no timeout/size config | Type-unsafe; no user control over HTTP behavior | Updated to use `AarunoHTTP` member with `setStream()`; added config methods | Header + impl change | Fixed |
+| AARUNO-043 | Medium | `src/sensors/AarunoUltrasonic.cpp` | `pulseIn()` blocks up to 30ms default; no async mode | Stalls `loop()` during echo | Documented as blocking; `setUltrasonicTimeout()` configurable | Documented | Documented |
+| AARUNO-044 | Medium | `src/sensors/AarunoKeypad.cpp` | `readKey()` does blocking scan with `delayMicroseconds(10)` per row | Brief blocking (~40ms worst case) | Documented as blocking scan | Documented | Documented |
+| AARUNO-045 | Medium | `src/actuators/AarunoStepper.cpp` `step()` | `delay(dly)` per step — fully blocking | Stalls `loop()` for entire move duration | Documented as blocking per step; `stepperRelease()` available | Documented | Documented |
+| AARUNO-046 | Low | `docs/board-compatibility.md` | Title says "1.0.0" but library is 1.1.1 | Stale version reference | Updated title to 1.1.1 | File inspection | Fixed |
+| AARUNO-047 | Low | `library.properties` URL | `https://github.com/AARUNO/AARUNO` but actual repo is `https://github.com/AARUTO347/AARUNO` | Wrong repo URL | Updated to `https://github.com/AARUTO347/AARUNO` | File inspection | Fixed |
+| AARUNO-048 | Low | `library.properties` version | `version=1.1.1` but some docs referenced older | Version drift | All aligned to 1.1.1 | `grep` all files | Fixed |
 
 ---
 

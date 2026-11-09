@@ -249,7 +249,18 @@ class AarunoClass {
   bool wifiConnected();
   long wifiRSSI();
   void wifiDisconnect();
+  void wifiSetRetryPolicy(uint8_t retries, unsigned long delayMs);
+  uint8_t wifiRetryCount() const;
+  // ---- HTTP (ESP32/ESP8266 only) ----
+  // Perform a GET, streaming the response body to `out`. Returns HTTP status
+  // code (>0), -1 on connection failure, -2 on timeout, -3 on response too
+  // large. Use httpSetTimeouts()/httpSetMaxSize()/httpSetStream() to configure.
   int httpGet(const char *url, Stream &out);  // HTTP code, -1 on fail (ESP)
+  void httpSetConnectTimeout(unsigned long ms);
+  void httpSetReadTimeout(unsigned long ms);
+  void httpSetMaxResponseSize(unsigned long bytes);
+  int httpLastStatusCode() const;
+  unsigned long httpLastBodyBytes() const;
 
   // ---- Pin helpers ----
   bool isValidDigitalPin(uint8_t pin, bool needOutput = false);
@@ -271,6 +282,7 @@ class AarunoClass {
   AarunoButton _btn;
   AarunoDisplay _disp;
   AarunoWifi _wifi;
+  AarunoHTTP _http;
   AarunoAnalogEngine _aeng;
   AarunoDigitalEngine _deng;
   AarunoEncoder _enc;
@@ -278,7 +290,8 @@ class AarunoClass {
   AarunoMPU6050 _mpu;
   AarunoDS18B20 _ds;
   AarunoBMP280 _bmp;
-  AarunoStepper *_step;
+  AarunoStepper _step;
+  bool _stepBegun;
 
   int _ldrPin;
   int _potPin;

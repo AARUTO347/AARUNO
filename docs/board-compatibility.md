@@ -1,4 +1,4 @@
-# Board Compatibility — AARUNO 1.0.0
+# Board Compatibility — AARUNO 1.1.1
 
 Legend: ✅ supported · ⚠️ limited · ❌ unavailable (returns error, never fakes data).
 

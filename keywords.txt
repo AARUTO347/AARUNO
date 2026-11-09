@@ -189,6 +189,13 @@ wifiConnected	KEYWORD2
 wifiRSSI	KEYWORD2
 wifiDisconnect	KEYWORD2
 httpGet	KEYWORD2
+httpSetConnectTimeout	KEYWORD2
+httpSetReadTimeout	KEYWORD2
+httpSetMaxResponseSize	KEYWORD2
+httpLastStatusCode	KEYWORD2
+httpLastBodyBytes	KEYWORD2
+wifiSetRetryPolicy	KEYWORD2
+wifiRetryCount	KEYWORD2
 
 # Pin helpers
 isValidDigitalPin	KEYWORD2

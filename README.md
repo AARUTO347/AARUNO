@@ -102,6 +102,8 @@ float cm = ultrasonicarduino();
 | LED | `AARUNO.led(pin)` | `setLED()` / `setBrightness()` |
 | Buzzer | `AARUNO.buzzer(pin)` | `beep(freq, duration)` |
 | Relay | `AARUNO.relay(pin, activeHigh)` | `setRelay()` |
+| WiFi (ESP) | `AARUNO.wifiStart(ssid, pass)` | `wifiState()` / `wifiConnected()` |
+| HTTP (ESP) | `AARUNO.httpGet(url, Serial)` | `httpLastStatusCode()` |
 | Error | — | `lastError()` / `errorString()` |
 
 ### Error Handling
