@@ -10,12 +10,16 @@
 // exhaustion on large or malicious responses.
 // On non-ESP boards returns -1 with AARUNO_UNSUPPORTED.
 #if !defined(ARDUINO)
+#ifndef AARUNO_STREAM_DEFINED
+#define AARUNO_STREAM_DEFINED
 // Minimal host fallback so header is parseable without Arduino.h.
 class Stream {
  public:
   virtual size_t write(const uint8_t *buffer, size_t size) { return 0; }
   virtual size_t write(uint8_t b) { return 0; }
+  virtual size_t print(const char *) { return 0; }
 };
+#endif
 #endif
 
 class AarunoHTTP {

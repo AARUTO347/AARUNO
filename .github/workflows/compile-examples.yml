@@ -16,42 +16,116 @@ jobs:
           g++ -std=c++11 -Wall -Wextra -I src tests/host/test_util.cpp src/sensors/AarunoDigital.cpp src/sensors/AarunoEncoder.cpp -o /tmp/aaruno_host
           /tmp/aaruno_host
 
-  compile-all:
+  compile-avr:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - fqbn: arduino:avr:uno
-            name: uno-r3
-          - fqbn: arduino:renesas_uno:minima
-            name: uno-r4-minima
-          - fqbn: arduino:renesas_uno:unowifi
-            name: uno-r4-wifi
-          - fqbn: esp32:esp32:esp32
-            name: esp32
-          - fqbn: esp8266:esp8266:nodemcuv2
-            name: esp8266
     steps:
       - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install AVR core
+        run: arduino-cli core install arduino:avr@1.8.8
       - uses: arduino/compile-sketches@v1
         with:
-          fqbn: ${{ matrix.fqbn }}
-          platforms: |
-            - name: arduino:avr
-            - name: arduino:renesas_uno
-            - name: esp32:esp32
-              source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-            - name: esp8266:esp8266
-              source-url: http://arduino.esp8266.com/stable/package_esp8266com_index.json
+          fqbn: arduino:avr:uno
           sketch-paths: |
             examples/Basic/Basic.ino
             examples/Ultrasonic/Ultrasonic.ino
-            examples/DHT11/DHT11.ino
             examples/LDR/LDR.ino
             examples/MotionDetection/MotionDetection.ino
             examples/LEDBuzzer/LEDBuzzer.ino
+          cli-compile-flags: --warnings all
+
+  compile-avr-full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install AVR core
+        run: arduino-cli core install arduino:avr@1.8.8
+      - name: Install optional deps
+        run: |
+          arduino-cli lib install "DHT sensor library"
+          arduino-cli lib install "Adafruit Unified Sensor"
+          arduino-cli lib install "Adafruit SSD1306"
+          arduino-cli lib install "Adafruit GFX Library"
+          arduino-cli lib install "LiquidCrystal I2C"
+          arduino-cli lib install "OneWire"
+          arduino-cli lib install "DallasTemperature"
+          arduino-cli lib install "Adafruit BMP280 Library"
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:avr:uno
+          sketch-paths: |
+            examples/DHT11/DHT11.ino
             examples/OLED/OLED.ino
+            examples/I2CLCD/I2CLCD.ino
+            examples/MPU6050/MPU6050.ino
+          cli-compile-flags: --warnings all
+
+  compile-renesas-minima:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install Renesas core
+        run: arduino-cli core install arduino:renesas_uno@1.5.0
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:renesas_uno:minima
+          sketch-paths: examples/Basic/Basic.ino
+          cli-compile-flags: --warnings all
+
+  compile-renesas-unowifi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install Renesas core
+        run: arduino-cli core install arduino:renesas_uno@1.5.0
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:renesas_uno:unowifi
+          sketch-paths: examples/Basic/Basic.ino
+          cli-compile-flags: --warnings all
+
+  compile-esp32:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install ESP32 core
+        run: |
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32@3.0.0
+      - name: Install optional deps
+        run: |
+          arduino-cli lib install "DHT sensor library"
+          arduino-cli lib install "Adafruit Unified Sensor"
+          arduino-cli lib install "Adafruit SSD1306"
+          arduino-cli lib install "Adafruit GFX Library"
+          arduino-cli lib install "LiquidCrystal I2C"
+          arduino-cli lib install "OneWire"
+          arduino-cli lib install "DallasTemperature"
+          arduino-cli lib install "Adafruit BMP280 Library"
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: esp32:esp32:esp32
+          sketch-paths: |
+            examples/Basic/Basic.ino
+            examples/Ultrasonic/Ultrasonic.ino
+            examples/LDR/LDR.ino
+            examples/MotionDetection/MotionDetection.ino
+            examples/LEDBuzzer/LEDBuzzer.ino
             examples/I2CLCD/I2CLCD.ino
             examples/GasSensor/GasSensor.ino
             examples/Joystick/Joystick.ino
@@ -62,29 +136,47 @@ jobs:
             examples/StepperMotor/StepperMotor.ino
             examples/HTTPGet/HTTPGet.ino
             examples/ESP32WiFi/ESP32WiFi.ino
-            examples/ESP8266WiFi/ESP8266WiFi.ino
           cli-compile-flags: --warnings all
-          libraries: |
-            - name: DHT sensor library
-            - name: Adafruit Unified Sensor
-            - name: Adafruit SSD1306
-            - name: Adafruit GFX Library
-            - name: LiquidCrystal I2C
-            - name: OneWire
-            - name: DallasTemperature
-            - name: Adafruit BMP280 Library
-            - name: SPI
 
-  compile-core-no-deps:
+  compile-esp8266:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: 1.0.0
+      - name: Install ESP8266 core
+        run: |
+          arduino-cli config add board_manager.additional_urls http://arduino.esp8266.com/stable/package_esp8266com_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp8266:esp8266@3.1.2
+      - name: Install optional deps
+        run: |
+          arduino-cli lib install "DHT sensor library"
+          arduino-cli lib install "Adafruit Unified Sensor"
+          arduino-cli lib install "Adafruit SSD1306"
+          arduino-cli lib install "Adafruit GFX Library"
+          arduino-cli lib install "LiquidCrystal I2C"
+          arduino-cli lib install "OneWire"
+          arduino-cli lib install "DallasTemperature"
+          arduino-cli lib install "Adafruit BMP280 Library"
       - uses: arduino/compile-sketches@v1
         with:
-          fqbn: arduino:avr:uno
-          platforms: |
-            - name: arduino:avr
+          fqbn: esp8266:esp8266:nodemcuv2
           sketch-paths: |
             examples/Basic/Basic.ino
             examples/Ultrasonic/Ultrasonic.ino
+            examples/LDR/LDR.ino
+            examples/MotionDetection/MotionDetection.ino
+            examples/LEDBuzzer/LEDBuzzer.ino
+            examples/I2CLCD/I2CLCD.ino
+            examples/GasSensor/GasSensor.ino
+            examples/Joystick/Joystick.ino
+            examples/RotaryEncoder/RotaryEncoder.ino
+            examples/Keypad4x4/Keypad4x4.ino
+            examples/MPU6050/MPU6050.ino
+            examples/RGBLED/RGBLED.ino
+            examples/StepperMotor/StepperMotor.ino
+            examples/HTTPGet/HTTPGet.ino
+            examples/ESP8266WiFi/ESP8266WiFi.ino
           cli-compile-flags: --warnings all

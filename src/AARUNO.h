@@ -29,11 +29,16 @@
 #else
 #include <stddef.h>
 #include <stdint.h>
+#ifndef AARUNO_STREAM_DEFINED
+#define AARUNO_STREAM_DEFINED
 // Minimal host fallback so IDEs/static analysis can parse the header.
 class Stream {
  public:
   virtual size_t print(const char *) { return 0; }
+  virtual size_t write(const uint8_t *buffer, size_t size) { return 0; }
+  virtual size_t write(uint8_t b) { return 0; }
 };
+#endif
 #endif
 
 // Main singleton API — MADE BY AARUTO. Recommended usage:
