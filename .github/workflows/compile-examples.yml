@@ -25,18 +25,18 @@ jobs:
           version: 1.0.0
       - name: Install AVR core
         run: arduino-cli core install arduino:avr@1.8.8
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: arduino:avr:uno
-          sketch-paths: |
-            examples/Basic/Basic.ino
-            examples/Ultrasonic/Ultrasonic.ino
-            examples/LDR/LDR.ino
-            examples/MotionDetection/MotionDetection.ino
-            examples/LEDBuzzer/LEDBuzzer.ino
-          cli-compile-flags: --warnings all
+      - name: Compile Basic
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/Basic/Basic.ino
+      - name: Compile Ultrasonic
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/Ultrasonic/Ultrasonic.ino
+      - name: Compile LDR
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/LDR/LDR.ino
+      - name: Compile MotionDetection
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/MotionDetection/MotionDetection.ino
+      - name: Compile LEDBuzzer
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/LEDBuzzer/LEDBuzzer.ino
 
-  compile-avr-full:
+  compile-avr-deps:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,17 +55,16 @@ jobs:
           arduino-cli lib install "OneWire"
           arduino-cli lib install "DallasTemperature"
           arduino-cli lib install "Adafruit BMP280 Library"
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: arduino:avr:uno
-          sketch-paths: |
-            examples/DHT11/DHT11.ino
-            examples/OLED/OLED.ino
-            examples/I2CLCD/I2CLCD.ino
-            examples/MPU6050/MPU6050.ino
-          cli-compile-flags: --warnings all
+      - name: Compile DHT11
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/DHT11/DHT11.ino
+      - name: Compile OLED
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/OLED/OLED.ino
+      - name: Compile I2CLCD
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/I2CLCD/I2CLCD.ino
+      - name: Compile MPU6050
+        run: arduino-cli compile --fqbn arduino:avr:uno examples/MPU6050/MPU6050.ino
 
-  compile-renesas-minima:
+  compile-renesas:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -74,26 +73,10 @@ jobs:
           version: 1.0.0
       - name: Install Renesas core
         run: arduino-cli core install arduino:renesas_uno@1.5.0
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: arduino:renesas_uno:minima
-          sketch-paths: examples/Basic/Basic.ino
-          cli-compile-flags: --warnings all
-
-  compile-renesas-unowifi:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: arduino/setup-arduino-cli@v2
-        with:
-          version: 1.0.0
-      - name: Install Renesas core
-        run: arduino-cli core install arduino:renesas_uno@1.5.0
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: arduino:renesas_uno:unowifi
-          sketch-paths: examples/Basic/Basic.ino
-          cli-compile-flags: --warnings all
+      - name: Compile Basic (Minima)
+        run: arduino-cli compile --fqbn arduino:renesas_uno:minima examples/Basic/Basic.ino
+      - name: Compile Basic (WiFi)
+        run: arduino-cli compile --fqbn arduino:renesas_uno:unowifi examples/Basic/Basic.ino
 
   compile-esp32:
     runs-on: ubuntu-latest
@@ -117,26 +100,36 @@ jobs:
           arduino-cli lib install "OneWire"
           arduino-cli lib install "DallasTemperature"
           arduino-cli lib install "Adafruit BMP280 Library"
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: esp32:esp32:esp32
-          sketch-paths: |
-            examples/Basic/Basic.ino
-            examples/Ultrasonic/Ultrasonic.ino
-            examples/LDR/LDR.ino
-            examples/MotionDetection/MotionDetection.ino
-            examples/LEDBuzzer/LEDBuzzer.ino
-            examples/I2CLCD/I2CLCD.ino
-            examples/GasSensor/GasSensor.ino
-            examples/Joystick/Joystick.ino
-            examples/RotaryEncoder/RotaryEncoder.ino
-            examples/Keypad4x4/Keypad4x4.ino
-            examples/MPU6050/MPU6050.ino
-            examples/RGBLED/RGBLED.ino
-            examples/StepperMotor/StepperMotor.ino
-            examples/HTTPGet/HTTPGet.ino
-            examples/ESP32WiFi/ESP32WiFi.ino
-          cli-compile-flags: --warnings all
+      - name: Compile Basic
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/Basic/Basic.ino
+      - name: Compile Ultrasonic
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/Ultrasonic/Ultrasonic.ino
+      - name: Compile LDR
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/LDR/LDR.ino
+      - name: Compile MotionDetection
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/MotionDetection/MotionDetection.ino
+      - name: Compile LEDBuzzer
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/LEDBuzzer/LEDBuzzer.ino
+      - name: Compile I2CLCD
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/I2CLCD/I2CLCD.ino
+      - name: Compile GasSensor
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/GasSensor/GasSensor.ino
+      - name: Compile Joystick
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/Joystick/Joystick.ino
+      - name: Compile RotaryEncoder
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/RotaryEncoder/RotaryEncoder.ino
+      - name: Compile Keypad4x4
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/Keypad4x4/Keypad4x4.ino
+      - name: Compile MPU6050
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/MPU6050/MPU6050.ino
+      - name: Compile RGBLED
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/RGBLED/RGBLED.ino
+      - name: Compile StepperMotor
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/StepperMotor/StepperMotor.ino
+      - name: Compile HTTPGet
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/HTTPGet/HTTPGet.ino
+      - name: Compile ESP32WiFi
+        run: arduino-cli compile --fqbn esp32:esp32:esp32 examples/ESP32WiFi/ESP32WiFi.ino
 
   compile-esp8266:
     runs-on: ubuntu-latest
@@ -160,23 +153,33 @@ jobs:
           arduino-cli lib install "OneWire"
           arduino-cli lib install "DallasTemperature"
           arduino-cli lib install "Adafruit BMP280 Library"
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: esp8266:esp8266:nodemcuv2
-          sketch-paths: |
-            examples/Basic/Basic.ino
-            examples/Ultrasonic/Ultrasonic.ino
-            examples/LDR/LDR.ino
-            examples/MotionDetection/MotionDetection.ino
-            examples/LEDBuzzer/LEDBuzzer.ino
-            examples/I2CLCD/I2CLCD.ino
-            examples/GasSensor/GasSensor.ino
-            examples/Joystick/Joystick.ino
-            examples/RotaryEncoder/RotaryEncoder.ino
-            examples/Keypad4x4/Keypad4x4.ino
-            examples/MPU6050/MPU6050.ino
-            examples/RGBLED/RGBLED.ino
-            examples/StepperMotor/StepperMotor.ino
-            examples/HTTPGet/HTTPGet.ino
-            examples/ESP8266WiFi/ESP8266WiFi.ino
-          cli-compile-flags: --warnings all
+      - name: Compile Basic
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/Basic/Basic.ino
+      - name: Compile Ultrasonic
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/Ultrasonic/Ultrasonic.ino
+      - name: Compile LDR
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/LDR/LDR.ino
+      - name: Compile MotionDetection
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/MotionDetection/MotionDetection.ino
+      - name: Compile LEDBuzzer
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/LEDBuzzer/LEDBuzzer.ino
+      - name: Compile I2CLCD
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/I2CLCD/I2CLCD.ino
+      - name: Compile GasSensor
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/GasSensor/GasSensor.ino
+      - name: Compile Joystick
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/Joystick/Joystick.ino
+      - name: Compile RotaryEncoder
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/RotaryEncoder/RotaryEncoder.ino
+      - name: Compile Keypad4x4
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/Keypad4x4/Keypad4x4.ino
+      - name: Compile MPU6050
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/MPU6050/MPU6050.ino
+      - name: Compile RGBLED
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/RGBLED/RGBLED.ino
+      - name: Compile StepperMotor
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/StepperMotor/StepperMotor.ino
+      - name: Compile HTTPGet
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/HTTPGet/HTTPGet.ino
+      - name: Compile ESP8266WiFi
+        run: arduino-cli compile --fqbn esp8266:esp8266:nodemcuv2 examples/ESP8266WiFi/ESP8266WiFi.ino
